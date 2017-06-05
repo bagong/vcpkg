@@ -1,0 +1,42 @@
+diff --git a/Qt5WebKit/WebKitTargets-debug.cmake b/Qt5WebKit/WebKitTargets-debug.cmake
+index 40c64bf..7f02537 100644
+--- a/Qt5WebKit/WebKitTargets-debug.cmake
++++ b/Qt5WebKit/WebKitTargets-debug.cmake
+@@ -8,13 +8,13 @@ set(CMAKE_IMPORT_FILE_VERSION 1)
+ # Import target "Qt5::WebKit" for configuration "Debug"
+ set_property(TARGET Qt5::WebKit APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+ set_target_properties(Qt5::WebKit PROPERTIES
+-  IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/lib/Qt5WebKitd.lib"
++  IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib/Qt5WebKitd.lib"
+   IMPORTED_LINK_DEPENDENT_LIBRARIES_DEBUG "Qt5::Positioning"
+-  IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/bin/Qt5WebKitd.dll"
++  IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/Qt5WebKitd.dll"
+   )
+ 
+ list(APPEND _IMPORT_CHECK_TARGETS Qt5::WebKit )
+-list(APPEND _IMPORT_CHECK_FILES_FOR_Qt5::WebKit "${_IMPORT_PREFIX}/lib/Qt5WebKitd.lib" "${_IMPORT_PREFIX}/bin/Qt5WebKitd.dll" )
++list(APPEND _IMPORT_CHECK_FILES_FOR_Qt5::WebKit "${_IMPORT_PREFIX}/debug/lib/Qt5WebKitd.lib" "${_IMPORT_PREFIX}/debug/bin/Qt5WebKitd.dll" )
+ 
+ # Commands beyond this point should not need to know the version.
+ set(CMAKE_IMPORT_FILE_VERSION)
+diff --git a/Qt5WebKitWidgets/Qt5WebKitWidgetsTargets-debug.cmake b/Qt5WebKitWidgets/Qt5WebKitWidgetsTargets-debug.cmake
+index f216626..a84a57c 100644
+--- a/Qt5WebKitWidgets/Qt5WebKitWidgetsTargets-debug.cmake
++++ b/Qt5WebKitWidgets/Qt5WebKitWidgetsTargets-debug.cmake
+@@ -8,13 +8,13 @@ set(CMAKE_IMPORT_FILE_VERSION 1)
+ # Import target "Qt5::WebKitWidgets" for configuration "Debug"
+ set_property(TARGET Qt5::WebKitWidgets APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+ set_target_properties(Qt5::WebKitWidgets PROPERTIES
+-  IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/lib/Qt5WebKitWidgetsd.lib"
++  IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib/Qt5WebKitWidgetsd.lib"
+   IMPORTED_LINK_DEPENDENT_LIBRARIES_DEBUG "Qt5::PrintSupport"
+-  IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/bin/Qt5WebKitWidgetsd.dll"
++  IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/Qt5WebKitWidgetsd.dll"
+   )
+ 
+ list(APPEND _IMPORT_CHECK_TARGETS Qt5::WebKitWidgets )
+-list(APPEND _IMPORT_CHECK_FILES_FOR_Qt5::WebKitWidgets "${_IMPORT_PREFIX}/lib/Qt5WebKitWidgetsd.lib" "${_IMPORT_PREFIX}/bin/Qt5WebKitWidgetsd.dll" )
++list(APPEND _IMPORT_CHECK_FILES_FOR_Qt5::WebKitWidgets "${_IMPORT_PREFIX}/debug/lib/Qt5WebKitWidgetsd.lib" "${_IMPORT_PREFIX}/debug/bin/Qt5WebKitWidgetsd.dll" )
+ 
+ # Commands beyond this point should not need to know the version.
+ set(CMAKE_IMPORT_FILE_VERSION)
