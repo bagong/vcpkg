@@ -1,0 +1,179 @@
+diff --git a/Source/cmake/FindICU.cmake b/Source/cmake/FindICU.cmake
+index 4e93286..8668bea 100644
+--- a/Source/cmake/FindICU.cmake
++++ b/Source/cmake/FindICU.cmake
+@@ -18,17 +18,43 @@ find_path(
+     NAMES unicode/utypes.h
+     HINTS ${PC_ICU_INCLUDE_DIRS}
+           ${PC_ICU_INCLUDEDIR}
++          ${WEBKIT_LIBRARIES_INCLUDE_DIR}
+     DOC "Include directory for the ICU library")
+ mark_as_advanced(ICU_INCLUDE_DIR)
+ 
+-# Look for the library.
++# Look for the libraries (debug/release).
++set(ICU_NAMES_RELEASE icuuc cygicuuc cygicuuc32 icuuc)
++set(ICU_NAMES_DEBUG icuucd cygicuucd cygicuuc32d icuucd)
++
+ find_library(
+-    ICU_LIBRARY
+-    NAMES icuuc cygicuuc cygicuuc32
++    ICU_LIBRARY_RELEASE
++    NAMES ${ICU_NAMES_RELEASE}
+     HINTS ${PC_ICU_LIBRARY_DIRS}
+           ${PC_ICU_LIBDIR}
+-    DOC "Libraries to link against for the common parts of ICU")
++          ${WEBKIT_LIBRARIES_LINK_DIR}
++    DOC "Libraries to link against for the common parts of ICU (Release)")
++mark_as_advanced(ICU_LIBRARY_RELEASE)
++
++find_library(
++    ICU_LIBRARY_DEBUG
++    NAMES ${ICU_NAMES_DEBUG}
++    HINTS ${PC_ICU_LIBRARY_DIRS}
++          ${PC_ICU_LIBDIR}
++          ${WEBKIT_LIBRARIES_LINK_DIR}
++    DOC "Libraries to link against for the common parts of ICU (Debug)")
++mark_as_advanced(ICU_LIBRARY_DEBUG)
++
++if(ICU_LIBRARY_RELEASE AND ICU_LIBRARY_DEBUG)
++    set(ICU_LIBRARY 
++        debug ${ICU_LIBRARY_DEBUG}
++        optimized ${ICU_LIBRARY_RELEASE}
++        CACHE FILEPATH "Libraries to link against for the common parts of ICU")
++else()
++    set(ICU_LIBRARY ${ICU_LIBRARY_RELEASE} CACHE FILEPATH "Libraries to link against for the common parts of ICU")
++endif()
+ mark_as_advanced(ICU_LIBRARY)
++unset(ICU_NAMES_RELEASE)
++unset(ICU_NAMES_DEBUG)
+ 
+ # Copy the results to the output variables.
+ if (ICU_INCLUDE_DIR AND ICU_LIBRARY)
+@@ -47,13 +73,40 @@ if (ICU_INCLUDE_DIR AND ICU_LIBRARY)
+ 
+     # Look for the ICU internationalization libraries
+     pkg_check_modules(PC_ICU_I18N icu-i18n)
++
++    set(ICU_I18N_NAMES_RELEASE icui18n icuin cygicuin cygicuin32)
++    set(ICU_I18N_NAMES_DEBUG icui18nd icuind cygicuind cygicuin32d)
++
+     find_library(
+-        ICU_I18N_LIBRARY
+-        NAMES icui18n icuin cygicuin cygicuin32
++        ICU_I18N_LIBRARY_RELEASE
++        NAMES ${ICU_I18N_NAMES_RELEASE}
+         HINTS ${PC_ICU_I18N_LIBRARY_DIRS}
+               ${PC_ICU_I18N_LIBDIR}
+-        DOC "Libraries to link against for ICU internationalization")
++              ${WEBKIT_LIBRARIES_LINK_DIR}
++        DOC "Libraries to link against for ICU internationalization (Release)")
++    mark_as_advanced(ICU_I18N_LIBRARY_RELEASE)
++
++    find_library(
++        ICU_I18N_LIBRARY_DEBUG
++        NAMES ${ICU_I18N_NAMES_DEBUG}
++        HINTS ${PC_ICU_I18N_LIBRARY_DIRS}
++              ${PC_ICU_I18N_LIBDIR}
++              ${WEBKIT_LIBRARIES_LINK_DIR}
++        DOC "Libraries to link against for ICU internationalization (Debug)")
++    mark_as_advanced(ICU_I18N_LIBRARY_DEBUG)
++
++    if(ICU_I18N_LIBRARY_RELEASE AND ICU_I18N_LIBRARY_DEBUG)
++        set(ICU_I18N_LIBRARY
++            debug ${ICU_I18N_LIBRARY_DEBUG}
++            optimized ${ICU_I18N_LIBRARY_RELEASE}
++            CACHE FILEPATH "Libraries to link against for ICU internationalization")
++    else()
++        set(ICU_I18N_LIBRARY ${ICU_I18N_LIBRARY_RELEASE} CACHE FILEPATH "Libraries to link against for ICU internationalization")
++    endif()
+     mark_as_advanced(ICU_I18N_LIBRARY)
++    unset(ICU_I18N_NAMES_RELEASE)
++    unset(ICU_I18N_NAMES_DEBUG)
++
+     if (ICU_I18N_LIBRARY)
+         set(ICU_I18N_FOUND 1)
+         set(ICU_I18N_LIBRARIES ${ICU_I18N_LIBRARY})
+@@ -61,11 +114,56 @@ if (ICU_INCLUDE_DIR AND ICU_LIBRARY)
+         set(ICU_I18N_FOUND 0)
+         set(ICU_I18N_LIBRARIES)
+     endif ()
++
++    # Look for the ICU data libraries
++    set(ICU_DATALIB_NAMES_RELEASE icudata libicudata cygicudata cygicudata32 icudt)
++    set(ICU_DATALIB_NAMES_DEBUG icudatad libicudatad cygicudatad cygicudata32d icudtd)
++
++    find_library(
++        ICU_DATA_LIBRARY_RELEASE
++        NAMES ${ICU_DATALIB_NAMES_RELEASE}
++        HINTS ${PC_ICU_I18N_LIBRARY_DIRS}
++              ${PC_ICU_I18N_LIBDIR}
++              ${WEBKIT_LIBRARIES_LINK_DIR}
++        DOC "Libraries to link against for ICU data (Release)")
++    mark_as_advanced(ICU_DATA_LIBRARY_RELEASE)
++
++    find_library(
++        ICU_DATA_LIBRARY_DEBUG
++        NAMES ${ICU_DATALIB_NAMES_DEBUG}
++        HINTS ${PC_ICU_I18N_LIBRARY_DIRS}
++              ${PC_ICU_I18N_LIBDIR}
++              ${WEBKIT_LIBRARIES_LINK_DIR}
++        DOC "Libraries to link against for ICU data (DEBUG)")
++    mark_as_advanced(ICU_DATA_LIBRARY_DEBUG)
++
++    if(ICU_DATA_LIBRARY_RELEASE AND ICU_DATA_LIBRARY_DEBUG)
++        set(ICU_DATA_LIBRARY
++            debug ${ICU_DATA_LIBRARY_DEBUG}
++            optimized ${ICU_DATA_LIBRARY_RELEASE}
++            CACHE FILEPATH "Libraries to link against for ICU data")
++    else()
++        set(ICU_DATA_LIBRARY ${ICU_DATA_LIBRARY_RELEASE} CACHE FILEPATH "Libraries to link against for ICU data")
++    endif()
++    mark_as_advanced(ICU_DATA_LIBRARY)
++    unset(ICU_DATALIB_NAMES_RELEASE)
++    unset(ICU_DATALIB_NAMES_DEBUG)
++
++
++    if (ICU_DATA_LIBRARY)
++        set(ICU_DATA_FOUND 1)
++        set(ICU_DATA_LIBRARIES ${ICU_DATA_LIBRARY})
++    else ()
++        set(ICU_DATA_FOUND 0)
++        set(ICU_DATA_LIBRARIES)
++    endif ()
+ else ()
+     set(ICU_FOUND 0)
+     set(ICU_I18N_FOUND 0)
++    set(ICU_DATA_FOUND 0)
+     set(ICU_LIBRARIES)
+     set(ICU_I18N_LIBRARIES)
++    set(ICU_DATA_LIBRARIES)
+     set(ICU_INCLUDE_DIRS)
+     set(ICU_VERSION)
+     set(ICU_MAJOR_VERSION)
+@@ -76,6 +174,8 @@ if (ICU_FOUND)
+     if (NOT ICU_FIND_QUIETLY)
+         message(STATUS "Found ICU header files in ${ICU_INCLUDE_DIRS}")
+         message(STATUS "Found ICU libraries: ${ICU_LIBRARIES}")
++        message(STATUS "Found ICU internationaliation libraries: ${ICU_I18N_LIBRARIES}")
++        message(STATUS "Found ICU data libraries: ${ICU_DATA_LIBRARIES}")
+     endif ()
+ else ()
+     if (ICU_FIND_REQUIRED)
+diff --git a/Source/cmake/OptionsQt.cmake b/Source/cmake/OptionsQt.cmake
+index 6dc4231..eca46b9 100644
+--- a/Source/cmake/OptionsQt.cmake
++++ b/Source/cmake/OptionsQt.cmake
+@@ -760,9 +760,9 @@ if (MSVC)
+         endforeach ()
+     endif ()
+ 
+-    if (NOT QT_CONAN_DIR)
+-        set(ICU_LIBRARIES icuuc${CMAKE_DEBUG_POSTFIX} icuin${CMAKE_DEBUG_POSTFIX} icudt${CMAKE_DEBUG_POSTFIX})
+-    endif ()
++#    if (NOT QT_CONAN_DIR)
++#        set(ICU_LIBRARIES icuuc${CMAKE_DEBUG_POSTFIX} icuin${CMAKE_DEBUG_POSTFIX} icudt${CMAKE_DEBUG_POSTFIX})
++#    endif ()
+ endif ()
+ 
+ if (NOT RUBY_FOUND AND RUBY_EXECUTABLE AND NOT RUBY_VERSION VERSION_LESS 1.9)
