@@ -1,0 +1,4 @@
+Source: qt5-webkit
+Version: 5.212-alpha2
+Description: Webkit module for Qt5. Reloaded qt5-webkit version (see https://github.com/annulen/webkit/wiki) developed as a drop-in replacement for pretty much abandoned qtwebkit. It can be used with recent qt5 versions, but - using a MS toolchain - can only be be built from VS2015 on upwards. It is expected to reenter the Qt distribution in version 5.10. Arch-Linux and MSYS2 already use it.
+Build-Depends: qt5, icu, libxml2, liblzma, libxslt, libwebp, fontconfig, expat
